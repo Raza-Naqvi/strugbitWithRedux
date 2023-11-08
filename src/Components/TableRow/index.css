@@ -1,0 +1,16 @@
+.table{
+    /* margin-bottom: 50px; */
+    background-color: #FFFFFF;
+}
+
+.table-button{
+    margin-left: 10px;
+    width: 60px;
+    background-color: #B0E1B7;
+}
+
+.table-buttonA{
+    margin-left: 10px;
+    width: 60px;
+    background-color: #EF9999;
+}
