@@ -1,27 +1,40 @@
 import React, { useState } from 'react';
 import './index.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { newItem } from '../../Store/Reducers/taskReducer';
+import { newItem, updateItem } from '../../Store/Reducers/taskReducer';
 
-const Modal = ({ onClose }) => {
+const Modal = ({ onClose, edit, customer }) => {
 
   const store = useSelector(state => state.task.data);
   const dispatch = useDispatch();
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
+  const [name, setName] = useState(edit ? customer.first_name : "");
+  const [email, setEmail] = useState(edit ? customer.email : "");
+  const [images, setImages] = useState(edit ? customer.avatar : "");
+
+  const handleImageChange = (e) => {
+    e.preventDefault();
+    const ProductImg = [...e.target.files];
+    const images = ProductImg.map((image) => URL.createObjectURL(image));
+    setImages(images);
+  };
 
   const add = () => {
-    if (name && email) {
-      let data = {
-        id: store.length + 1,
-        first_name: name,
-        email: email,
-        photo: "photo",
-      };
-      dispatch(newItem(data));
+    if (edit) {
+      dispatch(updateItem({ id: customer.id, updatedUserData: { first_name: name, email: email, avatar: images, } }));
       onClose();
     } else {
-      alert("Enter all field");
+      if (name && email) {
+        let data = {
+          id: store.length + 1,
+          first_name: name,
+          email: email,
+          avatar: images,
+        };
+        dispatch(newItem(data));
+        onClose();
+      } else {
+        alert("Enter all field");
+      };
     };
   };
 
@@ -35,7 +48,6 @@ const Modal = ({ onClose }) => {
           </span>
         </div>
         <div className="modal-content">
-          {/* <label htmlFor="customerName">Customer Name:</label> */}
           <input
             value={name}
             onChange={e => setName(e.target.value)}
@@ -43,7 +55,6 @@ const Modal = ({ onClose }) => {
             type="text"
             id="customerName"
           />
-          {/* <label htmlFor="email">Email:</label> */}
           <input
             value={email}
             onChange={e => setEmail(e.target.value)}
@@ -51,11 +62,14 @@ const Modal = ({ onClose }) => {
             type="email"
             id="email"
           />
-          {/* <label htmlFor="uploadPhoto">Upload Photo:</label> */}
           <input
             placeholder='Upload Photo'
-            type="file"
+            // type="file"
             id="uploadPhoto"
+            type="file"
+            // id="file"
+            onChange={handleImageChange}
+            accept="image/png, image/jpg, image/jpeg"
           />
           <button onClick={add} className="add-button">ADD Customer</button>
         </div>

@@ -23,7 +23,7 @@ export const taskSlice = createSlice({
         newItem: (state, action) => {
             return {
                 ...state.data, data: [...state.data, action.payload],
-            }
+            };
         },
         updateItem: (state, action) => {
             const { id, updatedUserData } = action.payload;
